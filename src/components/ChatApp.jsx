@@ -17,10 +17,18 @@ export function ChatApp({ session, onLock }) {
 
   useEffect(() => {
     let alive = true;
-    loadMessages(session).then((rows) => {
-      if (alive) setMessages(rows);
+    const refreshMessages = () => loadMessages(session).then((rows) => {
+      if (alive) {
+        setMessages((current) => {
+          const currentIds = new Set(current.map((message) => message.id));
+          const hasNewMessages = rows.some((message) => !currentIds.has(message.id));
+          return hasNewMessages || rows.length !== current.length ? rows : current;
+        });
+      }
       markSeen(session, session.user.id);
     }).catch(() => setError('Messages are unavailable right now.'));
+    refreshMessages();
+    const refreshTimer = window.setInterval(refreshMessages, 1800);
     const unsubscribe = subscribeMessages(session, (row) => {
       setMessages((current) => current.some((message) => message.id === row.id) ? current : [...current, row]);
       markSeen(session, session.user.id);
@@ -28,6 +36,7 @@ export function ChatApp({ session, onLock }) {
     presence.current = startPresence(session, session.user, { onTyping: setTyping, onOnline: setOnline });
     return () => {
       alive = false;
+      window.clearInterval(refreshTimer);
       unsubscribe();
       presence.current?.stop();
     };
