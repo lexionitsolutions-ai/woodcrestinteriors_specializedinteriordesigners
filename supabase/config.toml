@@ -1,0 +1,13 @@
+project_id = "lmxjbhvtlxzpnksqbwzg"
+
+[functions.private-access]
+verify_jwt = false
+
+[functions.clear-room]
+verify_jwt = false
+
+[functions.chat-messages]
+verify_jwt = false
+
+[functions.media-access]
+verify_jwt = false

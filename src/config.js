@@ -1,0 +1,10 @@
+export const SECRET_TRIGGER_ID = 'craftsmanship-trigger';
+export const PRIVATE_DISPLAY_NAME = 'AI Chat BOT';
+export const CHAT_ROOM_ID = '00000000-0000-4000-8000-000000000001';
+export const STORAGE_BUCKET = 'private-chat-media';
+export const MAX_IMAGE_MB = 12;
+export const MAX_VIDEO_MB = 100;
+export const MAX_AUDIO_MB = 30;
+export const MAX_FILE_MB = 50;
+export const ACCESS_FLOW_HEADER = 'woodcrest-consultation-flow';
+export const ENABLE_LOCAL_DEV_LOGIN = true;

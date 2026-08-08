@@ -1,0 +1,136 @@
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  justify-content: space-between;
+  padding: 14px clamp(16px, 4vw, 48px);
+  background: rgba(245, 241, 234, 0.92);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 900; color: var(--walnut); }
+.brand-logo {
+  width: 46px;
+  height: 46px;
+  border-radius: 4px;
+  object-fit: cover;
+  mix-blend-mode: multiply;
+}
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: white;
+  background: var(--walnut);
+  border-radius: 3px;
+}
+.main-nav { display: flex; gap: 18px; font-size: 0.92rem; color: #3b342d; }
+.hero {
+  min-height: calc(100dvh - 64px);
+  display: grid;
+  align-items: end;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  color: #fffaf2;
+  padding: 0 clamp(16px, 5vw, 72px) 78px;
+}
+.hero-media { position: absolute; inset: 0; z-index: -2; background: #33251c; }
+.hero-media img { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; }
+.hero::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(90deg, rgba(29,26,23,0.82), rgba(29,26,23,0.22)); }
+.hero-content p { max-width: 630px; color: #efe7dc; font-size: 1.08rem; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.split { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 48px; align-items: start; }
+.copy-stack { font-size: 1.05rem; }
+.inline-trigger { color: inherit; cursor: default; }
+.card-grid, .feature-grid, .testimonial-grid, .project-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 30px;
+}
+.collection-card, .project-card, .feature, blockquote {
+  background: rgba(255, 250, 242, 0.78);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.collection-card img, .project-card img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; background: #ddd0bd; }
+.collection-card div, .feature, blockquote { padding: 22px; }
+.collection-card button {
+  border: 0;
+  background: transparent;
+  color: var(--walnut);
+  padding: 0;
+  font-weight: 800;
+}
+.project-card h3 { padding: 0 18px 18px; }
+.contact-section { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 42px; }
+.contact-form, .enquiry-modal form { display: grid; gap: 14px; }
+label { display: grid; gap: 7px; color: #3d352e; font-weight: 700; }
+input, textarea, select {
+  width: 100%;
+  border: 1px solid #cfc1af;
+  background: #fffdf8;
+  border-radius: 5px;
+  padding: 12px 13px;
+  color: var(--ink);
+}
+textarea { resize: vertical; }
+.form-note { margin: 0; color: var(--walnut); font-weight: 700; }
+.footer {
+  background: #1d1a17;
+  color: #fffaf2;
+  padding: 42px clamp(16px, 5vw, 72px);
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1.2fr;
+  gap: 26px;
+}
+.footer p, .footer small { color: #d7cbbc; }
+.footer nav { display: grid; gap: 8px; }
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: rgba(29, 26, 23, 0.54);
+}
+.enquiry-modal {
+  position: relative;
+  width: min(520px, 100%);
+  background: var(--paper);
+  border-radius: 8px;
+  padding: 30px;
+  box-shadow: 0 30px 90px rgba(0,0,0,.28);
+}
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  background: transparent;
+  font-size: 28px;
+}
+
+@media (max-width: 900px) {
+  .main-nav { display: none; }
+  .split, .contact-section { grid-template-columns: 1fr; }
+  .card-grid, .feature-grid, .testimonial-grid, .project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .footer { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .site-header { gap: 10px; }
+  .brand span:last-child { font-size: 0.86rem; }
+  .quote-button { display: none; }
+  .hero { min-height: 92dvh; padding-bottom: 46px; }
+  .card-grid, .feature-grid, .testimonial-grid, .project-grid { grid-template-columns: 1fr; }
+  .enquiry-modal { padding: 24px 18px; }
+}
