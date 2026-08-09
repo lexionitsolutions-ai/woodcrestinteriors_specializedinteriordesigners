@@ -1,4 +1,27 @@
+/// <reference types="https://esm.sh/@supabase/functions-js/src/edge-runtime.d.ts" />
+
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.4';
+
+type SupabaseAdmin = ReturnType<typeof createClient>;
+
+type MessagePayload = {
+  sender_id?: string;
+  receiver_id?: string;
+  message_type?: 'text' | 'image' | 'video' | 'audio' | 'file';
+  text_content?: string;
+  file_path?: string;
+  file_name?: string;
+  file_size?: number;
+  mime_type?: string;
+  duration?: number;
+  delivered_at?: string;
+};
+
+type ChatRequestBody = {
+  token?: string;
+  action?: 'list' | 'seen' | 'send';
+  message?: MessagePayload;
+};
 
 function corsHeadersFor(req: Request) {
   const origin = req.headers.get('origin') || '*';
@@ -26,7 +49,7 @@ async function sha256(value: string) {
   return Array.from(new Uint8Array(hashBuffer)).map((byte) => byte.toString(16).padStart(2, '0')).join('');
 }
 
-async function privateUserForToken(supabase: ReturnType<typeof createClient>, token: string) {
+async function privateUserForToken(supabase: SupabaseAdmin, token: string) {
   const tokenHash = await sha256(token);
   const { data } = await supabase
     .from('private_sessions')
@@ -47,7 +70,7 @@ Deno.serve(async (req) => {
   const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || Deno.env.get('WOODCREST_SERVICE_KEY');
   if (!supabaseUrl || !serviceKey) return new Response(JSON.stringify({ ok: false }), { status: 500, headers: jsonHeaders });
 
-  const body = await req.json().catch(() => ({}));
+  const body = await req.json().catch(() => ({})) as ChatRequestBody;
   const token = String(body.token || '');
   const action = String(body.action || '');
   const supabase = createClient(supabaseUrl, serviceKey);
@@ -76,7 +99,10 @@ Deno.serve(async (req) => {
   }
 
   if (action === 'send') {
-    const payload = body.message || {};
+    const payload: MessagePayload = body.message || {};
+    if (!payload.sender_id || !payload.receiver_id || !payload.message_type) {
+      return new Response(JSON.stringify({ ok: false }), { status: 400, headers: jsonHeaders });
+    }
     if (payload.sender_id !== userId) return new Response(JSON.stringify({ ok: false }), { status: 403, headers: jsonHeaders });
     const { data: receiverIsMember } = await supabase.rpc('is_room_member', { room: ROOM_ID, member: payload.receiver_id });
     if (!receiverIsMember) return new Response(JSON.stringify({ ok: false }), { status: 403, headers: jsonHeaders });
